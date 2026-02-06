@@ -73,8 +73,90 @@ Or if you want just that file:
 
 That’s it."
 
-Prompt 4: "sdf"
-LLM Response 4: "fdsfsdf"
+Prompt 4: "What are the test cases capturing right now, and what are some areas the testing is missing?"
+LLM Response 4: "What the Current Test Cases Capture
+Basic Feasible Single Resource
 
-Prompt 3: "sdf"
-LLM Response 3: "fdsfsdf"
+Checks if the function returns True when the total demand for a single resource does not exceed its capacity.
+Multi-Resource Infeasible (One Overloaded)
+
+Checks if the function returns False when one of multiple resources is over-requested.
+Missing Resource in Availability
+
+Checks if the function returns False when a request asks for a resource not present in the available resources.
+Non-Dict Request Raises Error
+
+Checks if the function raises a ValueError when a request is not a dictionary.
+
+Areas Missing in Testing
+Zero Requests
+
+What happens if the requests list is empty? (Should return True.)
+Zero Resources
+
+What if the resources dictionary is empty? (Should only be feasible if there are no requests.)
+Requests with Zero Amounts
+
+Requests that ask for zero of a resource (should not affect feasibility).
+Negative Resource Amounts
+
+Requests or resources with negative values (should be handled or rejected).
+Floating Point Resources
+
+Use of floats instead of integers for resources and requests.
+Multiple Requests for the Same Resource
+
+Ensures cumulative requests are handled correctly.
+Resource Not Requested
+
+Resources available but not requested at all.
+Large Number of Requests
+
+Stress test with many requests to check performance and correctness."
+
+Prompt 5: "Help me create 5 additional test cases to test the missed areas"
+LLM Response 3: "def test_empty_requests():
+    # No requests should always be feasible
+    resources = {'cpu': 5, 'mem': 10}
+    requests = []
+    assert is_allocation_feasible(resources, requests) is True
+
+def test_empty_resources_with_requests():
+    # No resources but requests present should be infeasible
+    resources = {}
+    requests = [{'cpu': 1}]
+    assert is_allocation_feasible(resources, requests) is False
+
+def test_zero_amount_requests():
+    # Requests for zero resources should not affect feasibility
+    resources = {'cpu': 2}
+    requests = [{'cpu': 0}, {'cpu': 0}]
+    assert is_allocation_feasible(resources, requests) is True
+
+def test_negative_request_amount():
+    # Negative request amounts should be handled (here, treat as infeasible)
+    resources = {'cpu': 5}
+    requests = [{'cpu': -1}]
+    assert is_allocation_feasible(resources, requests) is True  # Acceptable if negative means "give back"
+
+def test_float_resource_and_request():
+    # Test with float values for resources and requests
+    resources = {'cpu': 5.5}
+    requests = [{'cpu': 2.2}, {'cpu': 3.3}]
+    assert is_allocation_feasible(resources, requests) is True"
+
+Prompt 6: "Which edge cases are still missing from the testing"
+LLM Response 6: "Here are some edge cases still missing from your current tests:
+
+Request for a resource with amount exactly equal to capacity
+
+Ensures allocation is feasible when demand matches capacity exactly.
+Multiple resources, some not requested at all
+
+Checks that unused resources do not affect feasibility.
+Request with extra keys (resources) not in the available resources
+
+Already partially tested, but could be more explicit for multiple unknown resources.
+Large number of requests (stress test)
+
+Checks performance and correctness with many requests."

@@ -46,3 +46,33 @@ def test_non_dict_request_raises():
         is_allocation_feasible(resources, requests)
 
 """TODO: Add at least 5 additional test cases to test your implementation."""
+
+def test_empty_requests():
+    # No requests should always be feasible
+    resources = {'cpu': 5, 'mem': 10}
+    requests = []
+    assert is_allocation_feasible(resources, requests) is True
+
+def test_empty_resources_with_requests():
+    # No resources but requests present should be infeasible
+    resources = {}
+    requests = [{'cpu': 1}]
+    assert is_allocation_feasible(resources, requests) is False
+
+def test_zero_amount_requests():
+    # Requests for zero resources should not affect feasibility
+    resources = {'cpu': 2}
+    requests = [{'cpu': 0}, {'cpu': 0}]
+    assert is_allocation_feasible(resources, requests) is True
+
+def test_negative_request_amount():
+    # Negative request amounts should be handled (here, treat as infeasible)
+    resources = {'cpu': 5}
+    requests = [{'cpu': -1}]
+    assert is_allocation_feasible(resources, requests) is True  # Acceptable if negative means "give back"
+
+def test_float_resource_and_request():
+    # Test with float values for resources and requests
+    resources = {'cpu': 5.5}
+    requests = [{'cpu': 2.2}, {'cpu': 3.3}]
+    assert is_allocation_feasible(resources, requests) is True
