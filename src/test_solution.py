@@ -74,7 +74,6 @@ def test_empty_resources_with_requests():
     requests = [{'cpu': 1}]
     assert is_allocation_feasible(resources, requests) is False
 
-# This test has to be removed because it violates the new requirement that at least one resource must remain unallocated after assignment.
 def test_zero_amount_requests():
     # Requests for zero resources should not affect feasibility
     resources = {'cpu': 2}
